@@ -1,7 +1,14 @@
+import React from "react";
+import {render} from "react-dom";
+import {Provider} from "react-redux";
+
+import BooksList from "./components/pages/BooksList";
+
 import {
     createStore,
     applyMiddleware
 } from "redux";
+
 
 import logger from "redux-logger";
 
@@ -14,31 +21,9 @@ const middleware = applyMiddleware(logger);
 const store = createStore(reducers, middleware);
 
 
-store.dispatch(postBooks(
-    [{
-            id: 1,
-            title: "book title",
-            description: "description of the book",
-            price: 20,
-        },
-        {
-            id: 2,
-            title: "book2 title",
-            description: "description of the book2",
-            price: 22,
-        }
-    ]
-));
-
-
-store.dispatch(deleteBooks({id: 1}));
-
-store.dispatch(updateBooks(
-    {
-        id: 2,
-        title: "Learn React Redux"
-    }
-));
-
-
-store.dispatch(addToCart([{id: 1}]));
+render(
+    <Provider store={store}>
+        <BooksList />
+    </Provider>,
+    document.getElementById("app")
+);

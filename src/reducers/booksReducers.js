@@ -1,5 +1,22 @@
-const reducer = (state = {books: []}, action) => {
+const initialBooks = [
+        {
+            id: 1,
+            title: "book title",
+            description: "description of the book",
+            price: 20,
+        },
+        {
+            id: 2,
+            title: "book2 title",
+            description: "description of the book2",
+            price: 22,
+        }
+]
+
+const reducer = (state = {books: [...initialBooks]}, action) => {
     switch (action.type) {
+        case "GET_BOOK":
+            return {...state, books: [...state.books]}
         case "POST_BOOK":
             return {books: [...state.books, ...action.payload]}
         case "DELETE_BOOK":
