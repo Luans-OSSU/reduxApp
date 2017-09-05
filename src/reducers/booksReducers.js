@@ -1,12 +1,12 @@
 const initialBooks = [
         {
-            id: 1,
+            _id: 1,
             title: "book title",
             description: "description of the book",
             price: 20,
         },
         {
-            id: 2,
+            _id: 2,
             title: "book2 title",
             description: "description of the book2",
             price: 22,
@@ -23,7 +23,7 @@ const reducer = (state = {books: [...initialBooks]}, action) => {
             const currentBookToDelete = [...state.books];
 
             const indexToDelete = currentBookToDelete.findIndex((book) => {
-                return book.id === action.payload.id;
+                return book._id === action.payload._id;
             });
 
             return {books: [...currentBookToDelete.slice(0 ,indexToDelete), ...currentBookToDelete.slice(indexToDelete + 1)]}
@@ -31,7 +31,7 @@ const reducer = (state = {books: [...initialBooks]}, action) => {
             const currentBookToUpdate = [...state.books];
 
             const indexToUpdate = currentBookToUpdate.findIndex((book) => {
-                return book.id === action.payload.id;
+                return book._id === action.payload._id;
             });
 
             const newBookToUpdate = {
