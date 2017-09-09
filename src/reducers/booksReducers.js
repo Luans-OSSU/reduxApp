@@ -23,7 +23,7 @@ const reducer = (state = {books: [...initialBooks]}, action) => {
             const currentBookToDelete = [...state.books];
 
             const indexToDelete = currentBookToDelete.findIndex((book) => {
-                return book._id === action.payload._id;
+                return book._id == action.payload;
             });
 
             return {books: [...currentBookToDelete.slice(0 ,indexToDelete), ...currentBookToDelete.slice(indexToDelete + 1)]}
