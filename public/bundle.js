@@ -43805,7 +43805,7 @@ var BookItem = function (_React$Component) {
                 var _id = _this.props._id;
 
                 var cartIndex = _this.props.cart.findIndex(function (cart) {
-                    return cart._id = _id;
+                    return cart._id === _id;
                 });
 
                 if (cartIndex === -1) _this.props.addToCart(book);else _this.props.updateCart(_id, 1);
@@ -44175,7 +44175,8 @@ var Cart = function (_React$Component) {
                         _react2.default.createElement(
                             "h6",
                             null,
-                            "Total amount: "
+                            "Total amount: ",
+                            this.props.totalAmount
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
@@ -44216,7 +44217,8 @@ var Cart = function (_React$Component) {
                         _react2.default.createElement(
                             _reactBootstrap.Col,
                             { xs: 6 },
-                            "Total $:"
+                            "Total $: ",
+                            this.props.totalAmount
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Button,
@@ -44239,7 +44241,8 @@ var Cart = function (_React$Component) {
 
 function mapStateToProps(state) {
     return {
-        cart: state.cart.cart
+        cart: state.cart.cart,
+        totalAmount: state.cart.totalAmount
     };
 }
 
@@ -44364,6 +44367,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+exports.totals = totals;
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var reducer = function reducer() {
@@ -44372,9 +44377,17 @@ var reducer = function reducer() {
 
     switch (action.type) {
         case "ADD_TO_CART":
-            return { cart: [].concat(_toConsumableArray(state), _toConsumableArray(action.payload)) };
+            return _extends({}, state, {
+                cart: action.payload,
+                totalAmount: totals(action.payload).amount,
+                totalQty: totals(action.payload).qty
+            });
         case "DELETE_CART_ITEM":
-            return { cart: [].concat(_toConsumableArray(state), _toConsumableArray(action.payload)) };
+            return _extends({}, state, {
+                cart: action.payload,
+                totalAmount: totals(action.payload).amount,
+                totalQty: totals(action.payload).qty
+            });
         case "UPDATE_CART":
             var currentCartUpdate = [].concat(_toConsumableArray(state.cart));
 
@@ -44389,11 +44402,32 @@ var reducer = function reducer() {
             var cartUpdate = [].concat(_toConsumableArray(currentCartUpdate.slice(0, indexToUpdate)), [newCartToUpdate], _toConsumableArray(currentCartUpdate.slice(indexToUpdate + 1)));
 
             return _extends({}, state, {
-                cart: cartUpdate
+                cart: cartUpdate,
+                totalAmount: totals(cartUpdate).amount,
+                totalQty: totals(cartUpdate).qty
             });
     }
     return state;
 };
+
+function totals(payloadArr) {
+    var totalAmount = payloadArr.map(function (cart) {
+        return cart.price * cart.quantity;
+    }).reduce(function (a, b) {
+        return a + b;
+    }, 0);
+
+    var totalQty = payloadArr.map(function (qty) {
+        return qty.quantity;
+    }).reduce(function (a, b) {
+        return a + b;
+    }, 0);
+
+    return {
+        amount: totalAmount.toFixed(2),
+        qty: totalQty
+    };
+}
 
 exports.default = reducer;
 
