@@ -3,6 +3,9 @@ import {render} from "react-dom";
 import {Provider} from "react-redux";
 
 import BooksList from "./components/pages/BooksList";
+import Cart from "./components/pages/cart";
+import BooksForm from "./components/pages/BooksForm";
+import Main from "./main";
 
 import {
     createStore,
@@ -21,9 +24,20 @@ const middleware = applyMiddleware(logger);
 const store = createStore(reducers, middleware);
 
 
-render(
+const Routes = (
     <Provider store={store}>
-        <BooksList />
-    </Provider>,
+        <Router history={browserHistory}>
+            <Route path="/" component={Main}>
+                <IndexRoute component={BooksList} />
+                <Route path="/admin" component={BooksForm} />
+                <Route path="/cart" component={Cart} />
+            </Route>
+        </Router>
+    </Provider>
+)
+
+
+render(
+    Routes,
     document.getElementById("app")
 );
